@@ -8,8 +8,11 @@ export function useCompany(id) {
     return { loading, data, error };
 }
 
-export function useJobs() {
-    const { loading, data, error } = useQuery(getJobsQuery, { fetchPolicy: 'network-only' })
+export function useJobs(limit, offset) {
+    const { loading, data, error } = useQuery(getJobsQuery, {
+        fetchPolicy: 'network-only',
+        variables: { limit, offset }
+    })
     return { loading, data, error }
 }
 

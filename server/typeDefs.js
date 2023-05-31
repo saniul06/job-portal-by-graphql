@@ -1,7 +1,8 @@
 export const typeDefs = `#graphql
 type Query {
     """Return array of jobs"""
-    jobs: [Job!]
+    # jobs(limit: Int, offset: Int): [Job!]
+    jobs(limit: Int, offset: Int): JobSubList
     job(id: ID): Job
     company(id: ID): Company
 }
@@ -38,6 +39,11 @@ type Job {
     date: String!
     company: Company!
     }
+
+type JobSubList {
+    items: [Job!]!
+    totalCount: Int
+}
 
 
 `
