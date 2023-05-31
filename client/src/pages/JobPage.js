@@ -2,27 +2,31 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { formatDate } from '../lib/formatters';
-import { getJobById } from '../lib/graphql/queries'
+import { getJobById, jobByIdQuery } from '../lib/graphql/queries'
+import { useQuery } from '@apollo/client';
+import { useJob } from '../lib/graphql/hooks';
 
 function JobPage() {
   const { jobId } = useParams();
-  const [state, setState] = useState({
-    loading: true,
-    job: undefined,
-    error: false
-  })
+  // const [state, setState] = useState({
+  //   loading: true,
+  //   job: undefined,
+  //   error: false
+  // })
 
 
-  useEffect(() => {
-    getJobById(jobId)
-      .then(data => setState(prev => ({ ...prev, job: data, loading: false })))
-      .catch(err => {
-        console.log('err: ', JSON.stringify(err, null, 2));
-        setState(prev => ({ ...prev, error: true, loading: false }))
-      })
-  }, [jobId])
+  // useEffect(() => {
+  //   getJobById(jobId)
+  //     .then(data => setState(prev => ({ ...prev, job: data, loading: false })))
+  //     .catch(err => {
+  //       console.log('err: ', JSON.stringify(err, null, 2));
+  //       setState(prev => ({ ...prev, error: true, loading: false }))
+  //     })
+  // }, [jobId])
 
-  const { loading, job, error } = state;
+  // const { loading, job, error } = state;
+
+  const { loading, data, error } = useJob(jobId);
 
   if (loading) {
     return <div>Loading...</div>
@@ -32,9 +36,8 @@ function JobPage() {
     return <div className="has-text-danger">Data Not Found</div>
   }
 
-  if (!job) {
-    return <div>Loading</div>
-  }
+  const { job } = data;
+
   return (
     <div>
       <h1 className="title is-2">
